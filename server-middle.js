@@ -1,9 +1,6 @@
 const fs = require('fs');
 const http = require('http');
-const inspect = require('util').inspect;
 const Busboy = require('busboy');
-const through2 = require('through2');
-const { Transform } = require('stream');
 const { Base64Encode } = require('base64-stream');
 
 const createRequest = (extraOptions) => {
@@ -42,18 +39,7 @@ http.createServer((req, res) => {
                 }
             });
 
-            const throughOpts = { "decodeStrings": false, "encoding": "utf8" };
-
-            const streamer = (chunk, enc, next) => {
-                next(null, chunk); // shorthand for this.push(chunk); next();
-            };
-            const suffixer = (done) => {
-                done(null, filename);
-            };
-
-            file
-                //.pipe(through2(throughOpts, streamer, suffixer))
-                .pipe(new Base64Encode())
+            file.pipe(new Base64Encode())
                 .pipe(outgoingRequest);
 
             file.on('data', (data) => {
