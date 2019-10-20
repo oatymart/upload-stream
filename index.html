@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Upload base64 stream</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.js" integrity="sha256-e9gNBsAcA0DBuRWbm0oZfbiCyhjLrI6bmqAl5o+ZjUA=" crossorigin="anonymous"></script>
+</head>
+<body>
+    <form id="myform" method="POST" action="http://localhost:4001" enctype="multipart/form-data">
+        <input type="file" name="filefield"><br>
+        <input type="hidden" name="metadata">
+        <button type="submit">Upload</button>
+    </form>
+    <script>
+        const form = document.querySelector('#myform');
+        const input = form.filefield;
+        const input2 = form.metadata;
+        let fileData;
+
+        input.onchange = () => {
+            const reader = new FileReader();
+
+            reader.onloadstart = () => {
+                console.log(input.files[0]);
+            }
+
+            reader.onload = () => {
+                console.log(reader.result);
+            }
+
+            reader.onerror = (event) => {
+                console.error(event);
+            }
+
+            fileData = reader.readAsDataURL(input.files[0]); // readAsDataURL handles base64 conversion
+            console.log(fileData);
+        };
+        // form.onsubmit = (e) => {
+        //     e.preventDefault();
+        //     $.ajax({
+        //         method: 'POST',
+        //         url: 'http://localhost:4001',
+        //         data: {file: fileData},
+        //         contentType: 'application/json'
+        //     });
+        // };
+    </script>
+</body>
+</html>
